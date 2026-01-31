@@ -1,5 +1,5 @@
 import { Store } from "@tanstack/store";
-import { IMode } from "@/types";
+import { type IMode } from "@/types";
 
 export const modeStore = new Store<IMode>({
   id: 0,

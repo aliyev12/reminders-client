@@ -1,6 +1,6 @@
 import "./ReminderForm.css";
 import { useState } from "react";
-import { ICreateReminder, TCreateReminderField } from "@/types";
+import { type ICreateReminder, type TCreateReminderField } from "@/types";
 
 var returnedNewReminder = {
   id: 34,
