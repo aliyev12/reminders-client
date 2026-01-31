@@ -10,7 +10,10 @@
       "Bash(done)",
       "Bash(chmod:*)",
       "Bash(npx prettier:*)",
-      "Bash(npm run sort-imports:*)"
+      "Bash(npm run sort-imports:*)",
+      "WebFetch(domain:tanstack.com)",
+      "WebSearch",
+      "Bash(npm run build:*)"
     ]
   }
 }

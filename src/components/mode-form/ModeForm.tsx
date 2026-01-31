@@ -1,6 +1,7 @@
 import "./ModeForm.css";
+import { useStore } from "@tanstack/react-store";
+import { modeStore, modesStore } from "@/store";
 import type { TModeField } from "@/types";
-import { modeStore } from "@/store";
 
 var returnedNewReminder = {
   id: 34,
@@ -21,11 +22,10 @@ var reminderCreate = {
   description: "This is a reminder to go and buy a bunch of gifts from amazon",
 };
 
-export default ({
-  addNewMode,
-}: {
-  addNewMode: ({ mode, address }: { mode: string; address: string }) => void;
-}) => {
+export default () => {
+  const mode = useStore(modeStore);
+  const modes = useStore(modesStore);
+
   function handleChange(
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
     field: TModeField,
@@ -38,13 +38,12 @@ export default ({
   function handleForm(e: React.SubmitEvent<HTMLFormElement>) {
     e.preventDefault();
 
-    addNewMode({
-      mode: modeStore.state.mode,
-      address: modeStore.state.address,
-    });
+    const newModes = [...modes];
+    const id = newModes.length === 0 ? 1 : newModes[newModes.length - 1].id + 1;
+    const newMode = { id, mode: mode.mode, address: mode.address };
+    newModes.push(newMode);
+    modesStore.setState(newModes);
   }
-
-  console.log("ModeForm modeStore = ", modeStore.state);
 
   return (
     <div
@@ -56,7 +55,7 @@ export default ({
           <label htmlFor="reminder-mode">Mode</label>
           <select
             onChange={(e) => handleChange(e, "mode")}
-            value={modeStore.state.mode}
+            value={mode.mode}
             name="reminder_mode"
             className="custom-select"
           >
@@ -77,7 +76,7 @@ export default ({
           <input
             id="reminder-address"
             type="text"
-            value={modeStore.state.address}
+            value={mode.address}
             name="reminder_address"
             onChange={(e) => handleChange(e, "address")}
           />

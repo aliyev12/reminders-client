@@ -1,7 +1,10 @@
 import "./ModesTable.css";
+import { useStore } from "@tanstack/react-store";
 import { modesStore } from "@/store";
 
 export default () => {
+  const modes = useStore(modesStore);
+
   return (
     <div
       className="ModesTable"
@@ -15,7 +18,7 @@ export default () => {
           </tr>
         </thead>
         <tbody>
-          {modesStore.state.map((mode, i) => {
+          {modes.map((mode, i) => {
             return (
               <tr key={i}>
                 <td>{mode.mode}</td>
