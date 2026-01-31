@@ -1,8 +1,8 @@
-// import ModesTable from "../modes-table/ModesTable";
 import "./NewReminder.css";
 import { modesStore, showAddNewModeFormStore } from "@/store";
-import ModeForm from "../mode-form/ModeForm";
-import ReminderForm from "../reminder-form/ReminderForm";
+import ModeForm from "@/components/mode-form/ModeForm";
+import ModesTable from "@/components/modes-table/ModesTable";
+import ReminderForm from "@/components/reminder-form/ReminderForm";
 
 export default () => {
   function addNewMode({ mode, address }: { mode: string; address: string }) {
@@ -15,7 +15,7 @@ export default () => {
 
   return (
     <div className="NewReminder">
-      {/* <ModesTable />  */}
+      <ModesTable />
       {!showAddNewModeFormStore.state && (
         <button onClick={() => showAddNewModeFormStore.setState(true)}>
           Add new mode

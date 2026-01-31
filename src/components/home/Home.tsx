@@ -1,6 +1,6 @@
 import "./Home.css";
 import { Link } from "@tanstack/react-router";
-import RemindersList from "../reminders-list/RemindersList";
+import RemindersList from "@/components/reminders-list/RemindersList";
 
 export default () => {
   return (

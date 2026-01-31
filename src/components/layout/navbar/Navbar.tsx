@@ -1,6 +1,6 @@
 import "./Navbar.css";
 import { useEffect, useState } from "react";
-import NavLinks from "./NavLinks";
+import NavLinks from "@/components/layout/navbar/NavLinks";
 
 export default () => {
   const [theme, setTheme] = useState(() => {

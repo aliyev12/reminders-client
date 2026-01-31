@@ -1,8 +1,8 @@
 import "./Layout.css";
 import { ReactNode } from "react";
-import Footer from "./footer/Footer";
-import MobileNav from "./mobile-nav/MobileNav";
-import Navbar from "./navbar/Navbar";
+import Footer from "@/components/layout/footer/Footer";
+import MobileNav from "@/components/layout/mobile-nav/MobileNav";
+import Navbar from "@/components/layout/navbar/Navbar";
 
 export default ({ children }: { children: ReactNode }) => {
   return (

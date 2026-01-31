@@ -1,6 +1,6 @@
 import "./ModeForm.css";
 import type { TModeField } from "@/types";
-import { modeStore } from "../../store";
+import { modeStore } from "@/store";
 
 var returnedNewReminder = {
   id: 34,
