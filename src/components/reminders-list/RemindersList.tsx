@@ -14,7 +14,7 @@ export default () => {
 
   if (isPending) return <span>Loading...</span>;
   if (error) return <span>Oops!</span>;
-
+  console.log(data);
   // /reminders
   return (
     <div className="RemindersList">

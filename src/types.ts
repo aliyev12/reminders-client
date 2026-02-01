@@ -22,6 +22,15 @@ export interface ICreateReminder {
   description: string;
 }
 
+export interface IAugmentedReminder {
+  title: string;
+  date: string;
+  reminders: { mode: string; address: string }[];
+  alerts: number[];
+  is_recurring: boolean;
+  description: string;
+}
+
 export type TCreateReminderField = keyof ICreateReminder;
 
 export interface IDialog {

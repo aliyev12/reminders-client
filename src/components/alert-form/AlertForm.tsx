@@ -2,6 +2,7 @@ import "./AlertForm.css";
 import { useStore } from "@tanstack/react-store";
 import { alertStore, alertsStore } from "@/store";
 import type { TAlertField } from "@/types";
+import AlertOptions from "./AlertOptions";
 
 export default () => {
   const alerts = useStore(alertsStore);
@@ -32,6 +33,13 @@ export default () => {
     });
   }
 
+  function updateAlertOptions(totalMs: number) {
+    alertStore.setState((prevState) => ({
+      ...prevState,
+      ms: totalMs,
+    }));
+  }
+
   return (
     <div
       className="AlertForm"
@@ -49,16 +57,9 @@ export default () => {
             onChange={(e) => handleChange(e, "name")}
           />
         </div>
-        <div className="form-group">
-          <label htmlFor="reminder-address">Milliseconds</label>
-          <input
-            id="reminder-alert-ms"
-            type="number"
-            value={alert.ms}
-            name="reminder_alert_ms"
-            onChange={(e) => handleChange(e, "ms")}
-          />
-        </div>
+
+        <AlertOptions updateAlertOptions={updateAlertOptions} />
+
         <div className="form-group">
           <button type="submit">Save</button>
         </div>

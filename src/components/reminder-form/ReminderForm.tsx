@@ -1,4 +1,5 @@
 import "./ReminderForm.css";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useStore } from "@tanstack/react-store";
 import {
   alertsStore,
@@ -6,7 +7,7 @@ import {
   modesStore,
   reminderFormStore,
 } from "@/store";
-import { type TCreateReminderField } from "@/types";
+import { type IAugmentedReminder, type TCreateReminderField } from "@/types";
 import UpdateAlerts from "./UpdateAlerts";
 import UpdateModes from "./UpdateModes";
 
@@ -30,10 +31,37 @@ var reminderCreate = {
 };
 
 export default () => {
+  const queryClient = useQueryClient();
   const reminderForm = useStore(reminderFormStore);
   const dialog = useStore(dialogStore);
   const modes = useStore(modesStore);
   const alerts = useStore(alertsStore);
+
+  const { mutate, isPending } = useMutation({
+    mutationFn: async (newAugmentedReminder: IAugmentedReminder) => {
+      const response = await fetch("http://localhost:8080/reminders", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-api-key": "SECRET_KEY",
+        },
+        body: JSON.stringify(newAugmentedReminder),
+      });
+      if (!response.ok) throw new Error("Failed to create");
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["reminders"] });
+      reminderFormStore.setState({
+        title: "",
+        date: "",
+        reminders: [],
+        alerts: [],
+        is_recurring: false,
+        description: "",
+      });
+    },
+  });
 
   function handleChange(
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -43,6 +71,8 @@ export default () => {
     const newFormState = { ...reminderForm };
     if (type && type === "checkbox") {
       newFormState[field] = (e.target as HTMLInputElement).checked as never;
+    } else if (type && type === "date") {
+      newFormState[field] = new Date(e.target.value).toISOString() as never;
     } else {
       newFormState[field] = e.target.value as never;
     }
@@ -85,12 +115,41 @@ export default () => {
 
   console.log("reminderForm = ", reminderForm);
 
+  /*
+  {
+    "title": "Buy gifts from amazon 22434343",
+    "date": "2026-27-30T04:58:47.231Z", 
+    "reminders": [{"mode": "email", "address": "dev7c4@gmail.com"}], 
+    "alerts": [1000],
+    "is_recurring": false,
+    "description": "This is a reminder to go and buy a bunch of gifts from amazon"
+}
+  */
+
+  function handleCreateNewReminder(e: React.SubmitEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const augmentedNewReminder: IAugmentedReminder = {
+      ...reminderForm,
+      reminders: modes.map((m) => ({
+        mode: m.mode,
+        address: m.address,
+      })),
+      alerts: alerts.map((a) => a.ms),
+    };
+
+    mutate(augmentedNewReminder);
+  }
+
   return (
     <div
       className="ReminderForm"
       style={{ border: "2px solid cyan", padding: "10px", margin: "10px" }}
     >
-      <form method="POST" className="ReminderForm__form">
+      <form
+        method="POST"
+        className="ReminderForm__form"
+        onSubmit={handleCreateNewReminder}
+      >
         <div className="form-group">
           <label htmlFor="reminder-title">Title</label>
           <input
@@ -104,9 +163,9 @@ export default () => {
           <label htmlFor="reminder-date">Date</label>
           <input
             id="reminder-date"
-            type="date"
+            type="datetime-local"
             value={reminderForm.date}
-            onChange={(e) => handleChange(e, "date")}
+            onChange={(e) => handleChange(e, "date", "date")}
           />
         </div>
         <div className="form-group">
@@ -205,6 +264,10 @@ export default () => {
               </ul>
             </>
           )}
+        </div>
+
+        <div className="form-group">
+          <button type="submit">Submit</button>
         </div>
       </form>
     </div>
