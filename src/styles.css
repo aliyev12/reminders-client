@@ -87,6 +87,19 @@ td {
   border: 1px solid #ddd;
 }
 
+dialog::backdrop {
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+}
+
+/* Base styles for the dialog */
+dialog {
+  border: none;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
 @media (min-width: 640px) {
 }
 @media (min-width: 768px) {

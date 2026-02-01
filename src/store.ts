@@ -1,5 +1,6 @@
 import { Store } from "@tanstack/store";
-import { type IMode } from "@/types";
+import type { ReactNode } from "react";
+import { type ICreateReminder, type IDialog, type IMode } from "@/types";
 
 export const modeStore = new Store<IMode>({
   id: 0,
@@ -7,5 +8,36 @@ export const modeStore = new Store<IMode>({
   address: "",
 });
 
-export const modesStore = new Store<IMode[]>([]);
+export const modesStore = new Store<IMode[]>([
+  {
+    id: 1,
+    mode: "email",
+    address: "aaa7c4@gmail.com",
+  },
+  {
+    id: 2,
+    mode: "email",
+    address: "dev7c4@gmail.com",
+  },
+  {
+    id: 3,
+    mode: "sms",
+    address: "910-670-1010",
+  },
+]);
 export const showAddNewModeFormStore = new Store<boolean>(false);
+
+export const reminderFormStore = new Store<ICreateReminder>({
+  title: "",
+  date: "",
+  reminders: [],
+  alerts: [],
+  is_recurring: false,
+  description: "",
+});
+
+export const dialogStore = new Store<IDialog>({
+  isOpen: false,
+  onClose: () => {},
+  children: null,
+});

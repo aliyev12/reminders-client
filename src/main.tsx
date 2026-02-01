@@ -7,6 +7,7 @@ import ReactDOM from "react-dom/client";
 import reportWebVitals from "@/reportWebVitals.ts";
 // Import the generated route tree
 import { routeTree } from "@/routeTree.gen";
+import Dialog from "./components/dialog/Dialog";
 
 const queryClient = new QueryClient();
 
@@ -37,6 +38,7 @@ if (rootElement && !rootElement.innerHTML) {
       <QueryClientProvider client={queryClient}>
         <RouterProvider router={router} />
         <ReactQueryDevtools initialIsOpen={false} />
+        <Dialog />
       </QueryClientProvider>
     </StrictMode>,
   );

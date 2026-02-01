@@ -1,6 +1,8 @@
 import "./ReminderForm.css";
-import { useState } from "react";
-import { type ICreateReminder, type TCreateReminderField } from "@/types";
+import { useStore } from "@tanstack/react-store";
+import { dialogStore, modesStore, reminderFormStore } from "@/store";
+import { type TCreateReminderField } from "@/types";
+import AddModes from "./AddModes";
 
 var returnedNewReminder = {
   id: 34,
@@ -22,30 +24,41 @@ var reminderCreate = {
 };
 
 export default () => {
-  const [formState, setFormState] = useState<ICreateReminder>({
-    title: "",
-    date: "",
-    reminders: [{ mode: "email", address: "dev7c4@gmail.com" }],
-    alerts: [1000],
-    is_recurring: false,
-    description: "",
-  });
+  const reminderForm = useStore(reminderFormStore);
+  const dialog = useStore(dialogStore);
+  const modes = useStore(modesStore);
 
   function handleChange(
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
     field: TCreateReminderField,
     type?: string,
   ) {
-    const newFormState = { ...formState };
+    const newFormState = { ...reminderForm };
     if (type && type === "checkbox") {
       newFormState[field] = (e.target as HTMLInputElement).checked as never;
     } else {
       newFormState[field] = e.target.value as never;
     }
-    setFormState(newFormState);
+    reminderFormStore.setState(newFormState);
   }
 
-  console.log("formState = ", formState);
+  function onDoneAddingModes(listOfCheckedModes: number[]) {
+    dialogStore.setState({ ...dialog, isOpen: false });
+
+    reminderFormStore.setState({
+      ...reminderForm,
+      reminders: listOfCheckedModes,
+    });
+  }
+
+  function handleAddMode() {
+    dialogStore.setState({
+      ...dialog,
+      isOpen: true,
+      children: <AddModes onDone={onDoneAddingModes} />,
+    });
+  }
+  console.log("reminderForm = ", reminderForm);
 
   return (
     <div
@@ -58,7 +71,7 @@ export default () => {
           <input
             id="reminder-title"
             type="text"
-            value={formState.title}
+            value={reminderForm.title}
             onChange={(e) => handleChange(e, "title")}
           />
         </div>
@@ -67,7 +80,7 @@ export default () => {
           <input
             id="reminder-date"
             type="date"
-            value={formState.date}
+            value={reminderForm.date}
             onChange={(e) => handleChange(e, "date")}
           />
         </div>
@@ -76,7 +89,7 @@ export default () => {
           <input
             id="reminder-is-recurring"
             type="checkbox"
-            checked={formState.is_recurring}
+            checked={reminderForm.is_recurring}
             onChange={(e) => handleChange(e, "is_recurring", "checkbox")}
           />
         </div>
@@ -84,9 +97,49 @@ export default () => {
           <label htmlFor="reminder-description">Recurring</label>
           <textarea
             id="reminder-description"
-            value={formState.description}
+            value={reminderForm.description}
             onChange={(e) => handleChange(e, "description")}
           ></textarea>
+        </div>
+        <div className="form-group">
+          <p>Reminder modes:</p>
+          <button type="button" onClick={handleAddMode}>
+            Update modes
+          </button>
+          {reminderForm.reminders.length <= 0 ? (
+            <p>No added modes</p>
+          ) : (
+            <>
+              <p>Added modes:</p>
+              <ul>
+                {reminderForm.reminders
+                  .map((id) => modes.find((x) => x.id === id))
+                  .filter((x) => x !== undefined)
+                  .map((mode) => {
+                    return (
+                      <li key={mode.id}>
+                        {mode.mode} @ {mode.address}{" "}
+                        <button
+                          type="button"
+                          onClick={() => {
+                            reminderFormStore.setState((prevState) => {
+                              return {
+                                ...prevState,
+                                reminders: reminderForm.reminders.filter(
+                                  (x) => x !== mode.id,
+                                ),
+                              };
+                            });
+                          }}
+                        >
+                          x
+                        </button>
+                      </li>
+                    );
+                  })}
+              </ul>
+            </>
+          )}
         </div>
       </form>
     </div>
