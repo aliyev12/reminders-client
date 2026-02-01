@@ -29,3 +29,11 @@ export interface IDialog {
   onClose: (e: React.MouseEvent<HTMLDialogElement>) => void;
   children: ReactNode;
 }
+
+export interface IAlert {
+  id: number;
+  name: string;
+  ms: number;
+}
+
+export type TAlertField = keyof IAlert;

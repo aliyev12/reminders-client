@@ -43,6 +43,11 @@ export default () => {
     const newMode = { id, mode: mode.mode, address: mode.address };
     newModes.push(newMode);
     modesStore.setState(newModes);
+    modeStore.setState({
+      id: 0,
+      mode: "email",
+      address: "",
+    });
   }
 
   return (
@@ -50,6 +55,7 @@ export default () => {
       className="ModeForm"
       style={{ border: "2px solid pink", padding: "10px", margin: "10px" }}
     >
+      <h3>Add a new mode</h3>
       <form onSubmit={handleForm} method="POST" className="ModeForm__form">
         <div className="form-group">
           <label htmlFor="reminder-mode">Mode</label>
@@ -67,6 +73,16 @@ export default () => {
             <option value="email">
               <div className="option-content">
                 <span>Email</span>
+              </div>
+            </option>
+            <option value="sms">
+              <div className="option-content">
+                <span>Text</span>
+              </div>
+            </option>
+            <option value="call">
+              <div className="option-content">
+                <span>Call</span>
               </div>
             </option>
           </select>

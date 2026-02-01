@@ -2,8 +2,13 @@ import "./ReminderForm.css";
 import { useStore } from "@tanstack/react-store";
 import { useEffect, useState } from "react";
 import { modesStore, reminderFormStore } from "@/store";
+import ModeForm from "../mode-form/ModeForm";
 
-export default ({ onDone }: { onDone: (newChecked: number[]) => void }) => {
+export default ({
+  onDoneUpdatingModes,
+}: {
+  onDoneUpdatingModes: (newChecked: number[]) => void;
+}) => {
   const modes = useStore(modesStore);
   const reminderForm = useStore(reminderFormStore);
   const [checkedModes, setCheckedModes] = useState<Record<number, boolean>>({});
@@ -13,7 +18,7 @@ export default ({ onDone }: { onDone: (newChecked: number[]) => void }) => {
 
     modes.forEach((mode) => {
       const isIncluded = reminderForm.reminders.includes(mode.id);
-      if (isIncluded) {
+      if (isIncluded || checkedModes[mode.id]) {
         newCheckedModes[mode.id] = true;
       } else {
         newCheckedModes[mode.id] = false;
@@ -35,7 +40,7 @@ export default ({ onDone }: { onDone: (newChecked: number[]) => void }) => {
         listOfCheckedModes.push(parseInt(key));
       }
     }
-    onDone(listOfCheckedModes);
+    onDoneUpdatingModes(listOfCheckedModes);
 
     const newCheckedModes: Record<number, boolean> = { ...checkedModes };
     Object.keys(setCheckedModes).forEach(
@@ -44,7 +49,8 @@ export default ({ onDone }: { onDone: (newChecked: number[]) => void }) => {
   }
 
   return (
-    <div className="AddModes">
+    <div className="UpdateModes">
+      <ModeForm />
       <fieldset>
         <legend>Available modes</legend>
 
@@ -62,7 +68,16 @@ export default ({ onDone }: { onDone: (newChecked: number[]) => void }) => {
                   onChange={() => addRemoveModes(mode.id)}
                 />
                 <label htmlFor={`mode-${mode.id}`}>
-                  {mode.mode} @ {mode.address}
+                  {mode.mode} @ {mode.address}{" "}
+                  <button
+                    onClick={() => {
+                      let newModes = [...modes];
+                      newModes = newModes.filter((m) => m.id !== mode.id);
+                      modesStore.setState(newModes);
+                    }}
+                  >
+                    x
+                  </button>
                 </label>
               </div>
             ))}

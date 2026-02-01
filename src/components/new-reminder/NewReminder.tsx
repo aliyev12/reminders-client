@@ -10,13 +10,13 @@ export default () => {
 
   return (
     <div className="NewReminder">
-      <ModesTable />
+      {/* <ModesTable />
       {!showAddNewModeForm && (
         <button onClick={() => showAddNewModeFormStore.setState(true)}>
           Add new mode
         </button>
       )}
-      {showAddNewModeForm && <ModeForm />}
+      {showAddNewModeForm && <ModeForm />} */}
       <ReminderForm />
     </div>
   );

@@ -1,6 +1,11 @@
 import { Store } from "@tanstack/store";
 import type { ReactNode } from "react";
-import { type ICreateReminder, type IDialog, type IMode } from "@/types";
+import {
+  type IAlert,
+  type ICreateReminder,
+  type IDialog,
+  type IMode,
+} from "@/types";
 
 export const modeStore = new Store<IMode>({
   id: 0,
@@ -41,3 +46,27 @@ export const dialogStore = new Store<IDialog>({
   onClose: () => {},
   children: null,
 });
+
+export const alertStore = new Store<IAlert>({
+  id: 0,
+  name: "",
+  ms: 0,
+});
+
+export const alertsStore = new Store<IAlert[]>([
+  {
+    id: 1,
+    name: "1 second",
+    ms: 1000,
+  },
+  {
+    id: 2,
+    name: "5 seconds",
+    ms: 5000,
+  },
+  {
+    id: 3,
+    name: "10 seconds",
+    ms: 10000,
+  },
+]);

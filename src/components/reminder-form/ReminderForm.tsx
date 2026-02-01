@@ -1,8 +1,14 @@
 import "./ReminderForm.css";
 import { useStore } from "@tanstack/react-store";
-import { dialogStore, modesStore, reminderFormStore } from "@/store";
+import {
+  alertsStore,
+  dialogStore,
+  modesStore,
+  reminderFormStore,
+} from "@/store";
 import { type TCreateReminderField } from "@/types";
-import AddModes from "./AddModes";
+import UpdateAlerts from "./UpdateAlerts";
+import UpdateModes from "./UpdateModes";
 
 var returnedNewReminder = {
   id: 34,
@@ -27,6 +33,7 @@ export default () => {
   const reminderForm = useStore(reminderFormStore);
   const dialog = useStore(dialogStore);
   const modes = useStore(modesStore);
+  const alerts = useStore(alertsStore);
 
   function handleChange(
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -42,7 +49,7 @@ export default () => {
     reminderFormStore.setState(newFormState);
   }
 
-  function onDoneAddingModes(listOfCheckedModes: number[]) {
+  function onDoneUpdatingModes(listOfCheckedModes: number[]) {
     dialogStore.setState({ ...dialog, isOpen: false });
 
     reminderFormStore.setState({
@@ -51,13 +58,31 @@ export default () => {
     });
   }
 
-  function handleAddMode() {
+  function onDoneUpdatingAlerts(listOfCheckedAlerts: number[]) {
+    dialogStore.setState({ ...dialog, isOpen: false });
+
+    reminderFormStore.setState({
+      ...reminderForm,
+      alerts: listOfCheckedAlerts,
+    });
+  }
+
+  function handleUpdateModes() {
     dialogStore.setState({
       ...dialog,
       isOpen: true,
-      children: <AddModes onDone={onDoneAddingModes} />,
+      children: <UpdateModes onDoneUpdatingModes={onDoneUpdatingModes} />,
     });
   }
+
+  function handleUpdateAlerts() {
+    dialogStore.setState({
+      ...dialog,
+      isOpen: true,
+      children: <UpdateAlerts onDoneUpdatingAlerts={onDoneUpdatingAlerts} />,
+    });
+  }
+
   console.log("reminderForm = ", reminderForm);
 
   return (
@@ -102,8 +127,8 @@ export default () => {
           ></textarea>
         </div>
         <div className="form-group">
-          <p>Reminder modes:</p>
-          <button type="button" onClick={handleAddMode}>
+          <h3>Reminder modes</h3>
+          <button type="button" onClick={handleUpdateModes}>
             Update modes
           </button>
           {reminderForm.reminders.length <= 0 ? (
@@ -127,6 +152,46 @@ export default () => {
                                 ...prevState,
                                 reminders: reminderForm.reminders.filter(
                                   (x) => x !== mode.id,
+                                ),
+                              };
+                            });
+                          }}
+                        >
+                          x
+                        </button>
+                      </li>
+                    );
+                  })}
+              </ul>
+            </>
+          )}
+        </div>
+        <div className="form-group">
+          <h3>Alerts</h3>
+          <button type="button" onClick={handleUpdateAlerts}>
+            Update alerts
+          </button>
+          {reminderForm.alerts.length <= 0 ? (
+            <p>No added alerts</p>
+          ) : (
+            <>
+              <p>Added alerts:</p>
+              <ul>
+                {reminderForm.alerts
+                  .map((id) => alerts.find((x) => x.id === id))
+                  .filter((x) => x !== undefined)
+                  .map((alert) => {
+                    return (
+                      <li key={alert.id}>
+                        {alert.name}
+                        <button
+                          type="button"
+                          onClick={() => {
+                            reminderFormStore.setState((prevState) => {
+                              return {
+                                ...prevState,
+                                alerts: reminderForm.alerts.filter(
+                                  (x) => x !== alert.id,
                                 ),
                               };
                             });
