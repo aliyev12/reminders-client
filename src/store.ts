@@ -19,16 +19,6 @@ export const modesStore = new Store<IMode[]>([
     mode: "email",
     address: "aaa7c4@gmail.com",
   },
-  {
-    id: 2,
-    mode: "email",
-    address: "dev7c4@gmail.com",
-  },
-  {
-    id: 3,
-    mode: "sms",
-    address: "910-670-1010",
-  },
 ]);
 export const showAddNewModeFormStore = new Store<boolean>(false);
 
@@ -58,15 +48,5 @@ export const alertsStore = new Store<IAlert[]>([
     id: 1,
     name: "1 second",
     ms: 1000,
-  },
-  {
-    id: 2,
-    name: "5 seconds",
-    ms: 5000,
-  },
-  {
-    id: 3,
-    name: "10 seconds",
-    ms: 10000,
   },
 ]);

@@ -134,7 +134,7 @@ export default () => {
         mode: m.mode,
         address: m.address,
       })),
-      alerts: alerts.map((a) => a.ms),
+      alerts: alerts.map((a) => ({ id: a.id.toString(), time: a.ms })),
     };
 
     mutate(augmentedNewReminder);

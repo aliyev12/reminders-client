@@ -26,7 +26,7 @@ export interface IAugmentedReminder {
   title: string;
   date: string;
   reminders: { mode: string; address: string }[];
-  alerts: number[];
+  alerts: { id: string; time: number }[];
   is_recurring: boolean;
   description: string;
 }
